@@ -1,0 +1,26 @@
+.posts{
+  .video{
+    display: flex;
+    flex-direction: column;
+  }
+  #create-post video, #create-post canvas {
+    width: 512px;
+    max-width: 100%;
+    display: none;
+    margin: auto;
+  }
+  h1{
+    text-align: center;
+    font-size: 50px;
+    margin: 20px 0;
+    text-transform: uppercase;
+  }
+  &__card{
+    .card{
+      width: 17rem !important;
+      &-text{
+        padding: 10px 0;
+      }
+    }
+  }
+}
