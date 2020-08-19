@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,17 +16,18 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
+    private authService: AuthService,
     private router: Router) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.loginForm.controls; }
+  get form() { return this.loginForm.controls; }
 
   onSubmit() {
     this.submitted = true;
@@ -33,7 +35,14 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-    console.log('username ' + this.f.username.value + ' pass ' + this.f.password.value)
+    this.authService.login(this.form.email.value, this.form.password.value)
+      .subscribe(
+        res =>{
+          this.router.navigate(['/home']);
+          console.log(res);
+        },
+        error => console.log(error)
+      )
   }
 
 }
