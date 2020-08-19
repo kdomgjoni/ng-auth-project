@@ -69,5 +69,12 @@ export class DashboardComponent implements OnInit {
     this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
   }
 
+  onStop() {
+    this.postPage = !this.postPage;
+    this.videoElement.nativeElement.pause();
+    (this.videoElement.nativeElement.srcObject as MediaStream).getVideoTracks()[0].stop();
+    this.videoElement.nativeElement.srcObject = null;
+  }
+
 
 }
