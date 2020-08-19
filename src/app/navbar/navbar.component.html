@@ -8,7 +8,7 @@
     <div class="navbar-nav">
       <a class="nav-item nav-link" routerLinkActive="active" [routerLink]="['/']">Home</a>
       <a class="nav-item nav-link" [routerLink]="['/login']">Log In</a>
-      <a class="nav-item nav-link" [routerLink]="['/login']">Log Out</a>
+      <a class="nav-item nav-link" (click)="logOut()">Log Out</a>
     </div>
   </div>
 </nav>

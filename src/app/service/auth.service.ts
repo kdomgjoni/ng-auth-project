@@ -12,4 +12,13 @@ export class AuthService {
     return this.http.post<any>('https://testapi.nuka.dev/api/auth/login', {email, password})
   }
 
+
+  getUserToken(){
+    return localStorage.getItem('currentUser')
+  }
+
+  removeUserToken(){
+    return localStorage.removeItem('currentUser');
+  }
+
 }
