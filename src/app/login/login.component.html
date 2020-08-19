@@ -3,8 +3,8 @@
     <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72"
       height="72">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail" class="sr-only">User Name</label>
-    <input type="username" formControlName="username" id="inputEmail" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" class="form-control" placeholder="username"
+    <label for="username" class="sr-only">User Name</label>
+    <input type="text" formControlName="username" id="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" class="form-control" placeholder="username"
       required autofocus>
     <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
       <div *ngIf="f.username.errors.required">Username is required</div>

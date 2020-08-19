@@ -1,24 +1,71 @@
-.posts{
-  .video{
-    display: flex;
-    flex-direction: column;
+.posts {
+  .add-post{
+    position: absolute;
+    bottom: 110px;
+    right: 140px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
   }
-  #create-post video, #create-post canvas {
-    width: 512px;
-    max-width: 100%;
-    display: none;
-    margin: auto;
+  .video-page{
+    width: 100%;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: white;
+    z-index: 1;
+    overflow-y: scroll;
+    .p-1{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      .hide-capture{
+        display:  none !important;
+      }
+
+    }
+    .btn-camera{
+      border-radius: 50%;
+      padding: 12px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .form-signin-post{
+      padding: 50px 0 100px 0;
+      display: flex;
+      flex-direction: column;
+      width: 70%;
+      input{
+        margin: 10px 0;
+      }
+      .btn-save{
+        margin-top: 10px;
+        width: 200px;
+        margin: 0 auto;
+      }
+    }
+    .vid {
+      width: 70%;
+      height: 100%;
+    }
+
   }
-  h1{
+  h1 {
     text-align: center;
     font-size: 50px;
     margin: 20px 0;
     text-transform: uppercase;
   }
-  &__card{
-    .card{
+  &__card {
+    .card {
       width: 17rem !important;
-      &-text{
+      &-text {
         padding: 10px 0;
       }
     }

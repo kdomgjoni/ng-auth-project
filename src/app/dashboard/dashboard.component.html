@@ -4,12 +4,40 @@
     <div class="posts">
       <h1>Posts</h1>
 
-      <div class="video">
-        <button type="button" (click)="onStart()">Start</button>
-        <button type="button" (click)="onStop()">stop</button>
-        <br>
-        <video #video> </video>
-      </div>
+      <button type="button" (click)="addPost()" class="btn btn-danger add-post">
+        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+          <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+        </svg>
+      </button>
+      <div class="video-page" [hidden]="postPage">
+        <div class="container vh-100">
+          <div class="d-flex flex-column align-items-center">
+             <div class="p-1">
+
+              <video #video class="vid" [ngClass]="{'hide-capture': videoStream}" autoplay></video>
+              <canvas #canvas class="vid" [ngClass]="{'hide-capture': image}"></canvas>
+
+             </div>
+             <div class="pb-2">
+                <button class="btn btn-primary btn-camera" (click)="capture()">
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-camera" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M15 12V6a1 1 0 0 0-1-1h-1.172a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 9.173 3H6.828a1 1 0 0 0-.707.293l-.828.828A3 3 0 0 1 3.172 5H2a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z"/>
+                    <path fill-rule="evenodd" d="M8 11a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                    <path d="M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
+                  </svg>
+                </button>
+             </div>
+             <form [formGroup]="postFrom" class="form-signin-post" (ngSubmit)="onSubmit()">
+
+              <input type="text" id="title" formControlName="title" class="form-control" placeholder="title" autofocus>
+
+              <input type="text" id="description" formControlName="description" class="form-control" placeholder="description" autofocus>
+              <button type="submit" class="btn btn-primary btn-save" (click)="addPost()">Save</button>
+             </form>
+          </div>
+       </div>
+      </div><!-- video-page -->
 
       <div class="posts__card">
         <div class="row">
