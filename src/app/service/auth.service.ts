@@ -6,15 +6,16 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+   }
 
   login(email, password){
     return this.http.post<any>('https://testapi.nuka.dev/api/auth/login', {email, password})
   }
 
 
-  getUserToken(){
-    return localStorage.getItem('currentUser')
+  public getUserToken(){
+    return localStorage.getItem('currentUser');
   }
 
   removeUserToken(){
