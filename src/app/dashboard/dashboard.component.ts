@@ -70,6 +70,8 @@ export class DashboardComponent implements OnInit {
   }
 
   onStop() {
+    this.image = true;
+    this.videoStream = false;
     this.postPage = !this.postPage;
     this.videoElement.nativeElement.pause();
     (this.videoElement.nativeElement.srcObject as MediaStream).getVideoTracks()[0].stop();

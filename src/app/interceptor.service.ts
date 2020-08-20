@@ -34,7 +34,6 @@ export class InterceptorService implements HttpInterceptor {
       }
       this.notifyService.showError("Wrong username or password !!", "Check Again");
 
-
       return throwError(errorMessage);
 
     }))
