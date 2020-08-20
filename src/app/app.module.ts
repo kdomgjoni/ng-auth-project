@@ -13,6 +13,12 @@ import { AuthService } from './service/auth.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterceptorService } from './interceptor.service';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { NotificationService } from './service/notification.service';
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,9 +31,12 @@ import { InterceptorService } from './interceptor.service';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
-  providers: [AuthService, {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}],
+  providers: [AuthService, {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true},
+    {provide: ToastrService, useClass: ToastrService}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
