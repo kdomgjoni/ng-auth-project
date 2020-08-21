@@ -78,5 +78,10 @@ export class DashboardComponent implements OnInit {
     this.videoElement.nativeElement.srcObject = null;
   }
 
+  resetCamera(){
+    this.image = true;
+    this.videoStream = false;
+  }
+
 
 }
