@@ -25,14 +25,25 @@ export class DashboardComponent implements OnInit {
   postPage = true;
 
 
-  constructor(private renderer: Renderer2, private formBuilder: FormBuilder) { }
+  constructor(
+    private renderer: Renderer2,
+    private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    //this.startCamera();
       this.postFrom = this.formBuilder.group({
         title: ['', Validators.required],
         description: ['', Validators.required]
       });
+  }
+
+  get form() { return this.postFrom.controls; }
+
+  onSubmit(){
+    if(this.postFrom.invalid){
+      return;
+    }
+
+    console.log(this.form);
   }
 
 

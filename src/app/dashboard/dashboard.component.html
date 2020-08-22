@@ -36,10 +36,10 @@
              </div>
              <form [formGroup]="postFrom" class="form-signin-post" (ngSubmit)="onSubmit()">
 
-              <input type="text" id="title" formControlName="title" class="form-control" placeholder="title" autofocus>
+              <input type="text" id="title" formControlName="title" class="form-control" placeholder="title" autofocus required>
 
-              <input type="text" id="description" formControlName="description" class="form-control" placeholder="description" autofocus>
-              <button type="submit" class="btn btn-primary btn-save" (click)="addPost()">Save</button>
+              <input type="text" id="description" formControlName="description" class="form-control" placeholder="description" autofocus required>
+              <button type="submit" class="btn btn-primary btn-save">Save</button>
              </form>
              <button class="btn btn-danger btn-camera-close" (click)="onStop()">
               <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-x" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
