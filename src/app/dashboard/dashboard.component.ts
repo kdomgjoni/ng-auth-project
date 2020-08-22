@@ -23,23 +23,24 @@ export class DashboardComponent implements OnInit {
   image = true;
   videoStream = false;
   postPage = true;
-
+  picture;
+  pic;
 
   constructor(
     private renderer: Renderer2,
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-      this.postFrom = this.formBuilder.group({
-        title: ['', Validators.required],
-        description: ['', Validators.required]
-      });
+    this.postFrom = this.formBuilder.group({
+      title: ['', Validators.required],
+      description: ['', Validators.required]
+    });
   }
 
   get form() { return this.postFrom.controls; }
 
-  onSubmit(){
-    if(this.postFrom.invalid){
+  onSubmit() {
+    if (this.postFrom.invalid) {
       return;
     }
 
@@ -67,7 +68,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  addPost(){
+  addPost() {
     this.postPage = !this.postPage;
     this.startCamera();
   }
@@ -78,7 +79,21 @@ export class DashboardComponent implements OnInit {
     this.renderer.setProperty(this.canvas.nativeElement, 'width', this.videoWidth);
     this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
     this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
+    this.picture = this.dataURItoBlob(this.canvas.nativeElement.toDataURL());
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      this.pic = reader.result;
+
+    }
+
+
+    reader.readAsDataURL(this.picture);
+
   }
+
 
   onStop() {
     this.image = true;
@@ -89,9 +104,22 @@ export class DashboardComponent implements OnInit {
     this.videoElement.nativeElement.srcObject = null;
   }
 
-  resetCamera(){
+  resetCamera() {
     this.image = true;
     this.videoStream = false;
+  }
+
+
+  dataURItoBlob(dataURI) {
+    var byteString = atob(dataURI.split(',')[1]);
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    var blob = new Blob([ab], { type: mimeString });
+    return blob;
   }
 
 

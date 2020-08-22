@@ -17,7 +17,9 @@
 
               <video #video class="vid" [ngClass]="{'hide-capture': videoStream}" autoplay></video>
               <canvas #canvas class="vid" [ngClass]="{'hide-capture': image}"></canvas>
-
+              <div>
+                <img [src]="pic" alt="">
+              </div>
              </div>
              <div class="pb-2">
                 <button class="btn btn-primary btn-camera" (click)="capture()">
