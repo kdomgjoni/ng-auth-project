@@ -9,7 +9,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class DashboardComponent implements OnInit {
   @ViewChild('video', { static: true }) videoElement: ElementRef;
   @ViewChild('canvas', { static: true }) canvas: ElementRef;
-
   constraints = {
     video: {
       facingMode: "environment",
@@ -25,6 +24,7 @@ export class DashboardComponent implements OnInit {
   postPage = true;
   picture;
   pic;
+  uploadImage = false;
 
   constructor(
     private renderer: Renderer2,
@@ -50,9 +50,10 @@ export class DashboardComponent implements OnInit {
 
   startCamera() {
     if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-      navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(this.handleError);
-    } else {
-      alert('Sorry, camera not available.');
+      navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(() => {
+        this.uploadImage = true;
+        console.log('test');
+      });
     }
   }
 
@@ -68,59 +69,56 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  addPost() {
-    this.postPage = !this.postPage;
-    this.startCamera();
+
+addPost() {
+  this.postPage = !this.postPage;
+  this.startCamera();
+}
+
+
+
+capture() {
+  this.image = false;
+  this.videoStream = true;
+  this.renderer.setProperty(this.canvas.nativeElement, 'width', this.videoWidth);
+  this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
+  this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
+  this.picture = this.dataURItoBlob(this.canvas.nativeElement.toDataURL());
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    this.pic = reader.result;
   }
+  reader.readAsDataURL(this.picture);
 
-  capture() {
-    this.image = false;
-    this.videoStream = true;
-    this.renderer.setProperty(this.canvas.nativeElement, 'width', this.videoWidth);
-    this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
-    this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
-    this.picture = this.dataURItoBlob(this.canvas.nativeElement.toDataURL());
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-
-      this.pic = reader.result;
-
-    }
+}
 
 
-    reader.readAsDataURL(this.picture);
+onStop() {
+  this.image = true;
+  this.videoStream = false;
+  this.postPage = !this.postPage;
+  this.videoElement.nativeElement.pause();
+  (this.videoElement.nativeElement.srcObject as MediaStream).getVideoTracks()[0].stop();
+  this.videoElement.nativeElement.srcObject = null;
+}
 
+resetCamera() {
+  this.image = true;
+  this.videoStream = false;
+}
+
+dataURItoBlob(dataURI) {
+  var byteString = atob(dataURI.split(',')[1]);
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
   }
-
-
-  onStop() {
-    this.image = true;
-    this.videoStream = false;
-    this.postPage = !this.postPage;
-    this.videoElement.nativeElement.pause();
-    (this.videoElement.nativeElement.srcObject as MediaStream).getVideoTracks()[0].stop();
-    this.videoElement.nativeElement.srcObject = null;
-  }
-
-  resetCamera() {
-    this.image = true;
-    this.videoStream = false;
-  }
-
-
-  dataURItoBlob(dataURI) {
-    var byteString = atob(dataURI.split(',')[1]);
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-    for (var i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    var blob = new Blob([ab], { type: mimeString });
-    return blob;
-  }
+  var blob = new Blob([ab], { type: mimeString });
+  return blob;
+}
 
 
 }
