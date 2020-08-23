@@ -48,6 +48,8 @@ export class DashboardComponent implements OnInit {
     console.log(this.form);
   }
 
+
+  //show input image to DOM
   preview(files) {
     if (files.length === 0)
     return;
@@ -59,7 +61,6 @@ export class DashboardComponent implements OnInit {
     }
 
     const reader = new FileReader();
-    console.log(this.imagePath);
     reader.readAsDataURL(files[0]);
     reader.onload = (e) => {
       this.imgURL = reader.result;
@@ -67,6 +68,7 @@ export class DashboardComponent implements OnInit {
   }
 
 
+//Start web cam if is supported from the browser otherwise show input image file
 startCamera() {
   if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
     navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(() => {
@@ -76,10 +78,8 @@ startCamera() {
   }
 }
 
-handleError(error) {
-  console.log('Error: ', error);
-}
 
+// Play video cam
 attachVideo(stream) {
   this.renderer.setProperty(this.videoElement.nativeElement, 'srcObject', stream);
   this.renderer.listen(this.videoElement.nativeElement, 'play', (event) => {
@@ -89,13 +89,14 @@ attachVideo(stream) {
 }
 
 
+// show the post Page where you can add posts
 addPost() {
   this.postPage = !this.postPage;
   this.startCamera();
 }
 
 
-
+// showing canvas image and reading it as a file
 capture() {
   this.image = false;
   this.videoStream = true;
@@ -113,6 +114,7 @@ capture() {
 }
 
 
+// Terminate web cam
 onStop() {
   this.image = true;
   this.videoStream = false;
@@ -122,11 +124,13 @@ onStop() {
   this.videoElement.nativeElement.srcObject = null;
 }
 
+// Reset camera to take another pic
 resetCamera() {
   this.image = true;
   this.videoStream = false;
 }
 
+// Converting image to Blob
 dataURItoBlob(dataURI) {
   var byteString = atob(dataURI.split(',')[1]);
   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
