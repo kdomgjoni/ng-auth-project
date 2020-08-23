@@ -22,9 +22,9 @@ export class DashboardComponent implements OnInit {
   image = true;
   videoStream = false;
   postPage = true;
-  picture;
-  pic;
-  uploadImage = false;
+  picture; // Blobl iamge coverted from image64
+  uploadImage = false; // hide input file when browser support webcam
+  imgURL: any;//Input image url
 
   constructor(
     private renderer: Renderer2,
@@ -37,6 +37,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+
   get form() { return this.postFrom.controls; }
 
   onSubmit() {
@@ -47,27 +48,45 @@ export class DashboardComponent implements OnInit {
     console.log(this.form);
   }
 
+  preview(files) {
+    if (files.length === 0)
+    return;
 
-  startCamera() {
-    if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-      navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(() => {
-        this.uploadImage = true;
-        console.log('test');
-      });
+    const mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+
+      return;
+    }
+
+    const reader = new FileReader();
+    console.log(this.imagePath);
+    reader.readAsDataURL(files[0]);
+    reader.onload = (e) => {
+      this.imgURL = reader.result;
     }
   }
 
-  handleError(error) {
-    console.log('Error: ', error);
-  }
 
-  attachVideo(stream) {
-    this.renderer.setProperty(this.videoElement.nativeElement, 'srcObject', stream);
-    this.renderer.listen(this.videoElement.nativeElement, 'play', (event) => {
-      this.videoHeight = this.videoElement.nativeElement.videoHeight;
-      this.videoWidth = this.videoElement.nativeElement.videoWidth;
+startCamera() {
+  if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+    navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(() => {
+      this.uploadImage = true;
+      console.log('test');
     });
   }
+}
+
+handleError(error) {
+  console.log('Error: ', error);
+}
+
+attachVideo(stream) {
+  this.renderer.setProperty(this.videoElement.nativeElement, 'srcObject', stream);
+  this.renderer.listen(this.videoElement.nativeElement, 'play', (event) => {
+    this.videoHeight = this.videoElement.nativeElement.videoHeight;
+    this.videoWidth = this.videoElement.nativeElement.videoWidth;
+  });
+}
 
 
 addPost() {
@@ -87,7 +106,7 @@ capture() {
 
   const reader = new FileReader();
   reader.onload = () => {
-    this.pic = reader.result;
+    //this.pic = reader.result;
   }
   reader.readAsDataURL(this.picture);
 

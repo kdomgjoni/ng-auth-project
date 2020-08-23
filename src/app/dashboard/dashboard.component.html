@@ -13,7 +13,7 @@
       <div class="video-page" [hidden]="postPage">
         <div class="container vh-100">
           <div class="d-flex flex-column align-items-center">
-             <div class="p-1">
+             <div class="p-1" [hidden]="uploadImage">
 
               <video #video class="vid" [ngClass]="{'hide-capture': videoStream}" autoplay></video>
               <canvas #canvas class="vid" [ngClass]="{'hide-capture': image}"></canvas>
@@ -35,8 +35,9 @@
                 </button>
              </div>
              <div id="upload-image" *ngIf="uploadImage">
+               <img [src]="imgURL" alt="" class="input-image" >
               <h6>Pick an Image instead</h6>
-              <input type="file" accept="image/*" id="image-picker">
+              <input type="file" #file accept="image/*" id="image-picker" (change)="preview(file.files)">
             </div>
              <form [formGroup]="postFrom" class="form-signin-post" (ngSubmit)="onSubmit()">
 
