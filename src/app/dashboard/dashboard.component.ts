@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild, AfterContentInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PostsService } from '../service/posts.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +12,7 @@ export class DashboardComponent implements OnInit {
   @ViewChild('canvas', { static: true }) canvas: ElementRef;
   constraints = {
     video: {
-      facingMode: "environment",
+      facingMode: 'environment',
       width: { ideal: 4096 },
       height: { ideal: 2160 }
     }
@@ -24,11 +25,17 @@ export class DashboardComponent implements OnInit {
   postPage = true;
   picture; // Blobl iamge coverted from image64
   uploadImage = false; // hide input file when browser support webcam
-  imgURL: any;//Input image url
+  imgURL: any;// Input image url
+  $posts;
 
   constructor(
     private renderer: Renderer2,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private postService: PostsService
+    ) {
+
+      this.$posts = this.postService.posts$;
+    }
 
   ngOnInit() {
     this.postFrom = this.formBuilder.group({
@@ -36,6 +43,7 @@ export class DashboardComponent implements OnInit {
       description: ['', Validators.required]
     });
   }
+
 
 
   get form() { return this.postFrom.controls; }
@@ -49,10 +57,11 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  //show input image to DOM
+  // show input image to DOM
   preview(files) {
-    if (files.length === 0)
+    if (files.length === 0) {
     return;
+    }
 
     const mimeType = files[0].type;
     if (mimeType.match(/image\/*/) == null) {
@@ -68,7 +77,7 @@ export class DashboardComponent implements OnInit {
   }
 
 
-//Start web cam if is supported from the browser otherwise show input image file
+// Start web cam if is supported from the browser otherwise show input image file
 startCamera() {
   if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
     navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(() => {
@@ -107,7 +116,7 @@ capture() {
 
   const reader = new FileReader();
   reader.onload = () => {
-    //this.pic = reader.result;
+    // this.pic = reader.result;
   }
   reader.readAsDataURL(this.picture);
 
@@ -133,7 +142,7 @@ resetCamera() {
 // Converting image to Blob
 dataURItoBlob(dataURI) {
   var byteString = atob(dataURI.split(',')[1]);
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
   var ab = new ArrayBuffer(byteString.length);
   var ia = new Uint8Array(ab);
   for (var i = 0; i < byteString.length; i++) {
