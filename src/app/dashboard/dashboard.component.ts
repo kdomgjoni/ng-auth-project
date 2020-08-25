@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild, AfterContentInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PostsService } from '../service/posts.service';
+import { IPosts } from '../model/posts.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,8 +26,17 @@ export class DashboardComponent implements OnInit {
   postPage = true;
   picture; // Blobl iamge coverted from image64
   uploadImage = false; // hide input file when browser support webcam
-  imgURL: any;// Input image url
+  imgURL: any; // Input image url
   $posts;
+
+
+  posts: IPosts = {
+    id: 0,
+    title: '',
+    description: '',
+    image: '',
+  };
+
 
   constructor(
     private renderer: Renderer2,
@@ -35,13 +45,16 @@ export class DashboardComponent implements OnInit {
     ) {
 
       this.$posts = this.postService.posts$;
+
+      this.postService.posts$.subscribe(data => console.log(data));
     }
 
   ngOnInit() {
     this.postFrom = this.formBuilder.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required]
+      title: [''],
+      description: ['']
     });
+
   }
 
 
@@ -53,7 +66,18 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    console.log(this.form);
+    this.posts.title = this.postFrom.controls.title.value;
+    this.posts.description = this.postFrom.controls.description.value;
+    this.posts.image = this.picture;
+
+    console.log(this.posts);
+
+    this.savePost();
+
+  }
+
+  savePost(){
+    this.postService.addPost(this.posts);
   }
 
 

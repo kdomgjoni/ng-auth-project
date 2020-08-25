@@ -29,5 +29,15 @@ export class PostsService {
     return Math.floor(Math.random() * 10000);
   }
 
+  addPost(post: IPosts){
+    this.posts = [
+      ...this.posts,{
+        ...post,
+        id: this.getRandomNumber()
+      }
+    ];
+    this.posts$.next(this.posts);
+  }
+
 
 }
