@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit {
   uploadImage = false; // hide input file when browser support webcam
   imgURL: any; // Input image url
   $posts;
+  pic;
 
 
   posts: IPosts = {
@@ -42,12 +43,19 @@ export class DashboardComponent implements OnInit {
     private renderer: Renderer2,
     private formBuilder: FormBuilder,
     private postService: PostsService
-    ) {
+  ) {
 
-      this.$posts = this.postService.posts$;
+    this.$posts = this.postService.posts$;
+    // this.postService.posts$.subscribe(data => {
+    //   data.forEach((i, index, arr) => {
+    //     if (index === arr.length - 1) {
+    //       this.pic = this.createImageFromBlob(i.image);
+    //       console.log(this);
+    //     }
+    //   });
+    // });
 
-      this.postService.posts$.subscribe(data => console.log(data));
-    }
+  }
 
   ngOnInit() {
     this.postFrom = this.formBuilder.group({
@@ -61,30 +69,27 @@ export class DashboardComponent implements OnInit {
 
   get form() { return this.postFrom.controls; }
 
+  savePost() {
+    this.postService.addPost(this.posts);
+  }
+
   onSubmit() {
     if (this.postFrom.invalid) {
       return;
     }
-
     this.posts.title = this.postFrom.controls.title.value;
     this.posts.description = this.postFrom.controls.description.value;
-    this.posts.image = this.picture;
-
-    console.log(this.posts);
-
+    this.posts.image = this.pic;
     this.savePost();
 
   }
 
-  savePost(){
-    this.postService.addPost(this.posts);
-  }
 
 
   // show input image to DOM
   preview(files) {
     if (files.length === 0) {
-    return;
+      return;
     }
 
     const mimeType = files[0].type;
@@ -101,80 +106,89 @@ export class DashboardComponent implements OnInit {
   }
 
 
-// Start web cam if is supported from the browser otherwise show input image file
-startCamera() {
-  if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-    navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(() => {
-      this.uploadImage = true;
-      console.log('test');
+  // Start web cam if is supported from the browser otherwise show input image file
+  startCamera() {
+    if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+      navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(() => {
+        this.uploadImage = true;
+      });
+    }
+  }
+
+
+  // Play video cam
+  attachVideo(stream) {
+    this.renderer.setProperty(this.videoElement.nativeElement, 'srcObject', stream);
+    this.renderer.listen(this.videoElement.nativeElement, 'play', (event) => {
+      this.videoHeight = this.videoElement.nativeElement.videoHeight;
+      this.videoWidth = this.videoElement.nativeElement.videoWidth;
     });
   }
-}
 
 
-// Play video cam
-attachVideo(stream) {
-  this.renderer.setProperty(this.videoElement.nativeElement, 'srcObject', stream);
-  this.renderer.listen(this.videoElement.nativeElement, 'play', (event) => {
-    this.videoHeight = this.videoElement.nativeElement.videoHeight;
-    this.videoWidth = this.videoElement.nativeElement.videoWidth;
-  });
-}
-
-
-// show the post Page where you can add posts
-addPost() {
-  this.postPage = !this.postPage;
-  this.startCamera();
-}
-
-
-// showing canvas image and reading it as a file
-capture() {
-  this.image = false;
-  this.videoStream = true;
-  this.renderer.setProperty(this.canvas.nativeElement, 'width', this.videoWidth);
-  this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
-  this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
-  this.picture = this.dataURItoBlob(this.canvas.nativeElement.toDataURL());
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    // this.pic = reader.result;
+  // show the post Page where you can add posts
+  addPost() {
+    this.postPage = !this.postPage;
+    this.startCamera();
   }
-  reader.readAsDataURL(this.picture);
-
-}
 
 
-// Terminate web cam
-onStop() {
-  this.image = true;
-  this.videoStream = false;
-  this.postPage = !this.postPage;
-  this.videoElement.nativeElement.pause();
-  (this.videoElement.nativeElement.srcObject as MediaStream).getVideoTracks()[0].stop();
-  this.videoElement.nativeElement.srcObject = null;
-}
+  // showing canvas image and reading it as a file
+  capture() {
+    this.image = false;
+    this.videoStream = true;
+    this.renderer.setProperty(this.canvas.nativeElement, 'width', this.videoWidth);
+    this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
+    this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
+    this.picture = this.dataURItoBlob(this.canvas.nativeElement.toDataURL());
 
-// Reset camera to take another pic
-resetCamera() {
-  this.image = true;
-  this.videoStream = false;
-}
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.pic = reader.result;
+    }
+    reader.readAsDataURL(this.picture);
 
-// Converting image to Blob
-dataURItoBlob(dataURI) {
-  var byteString = atob(dataURI.split(',')[1]);
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-  var ab = new ArrayBuffer(byteString.length);
-  var ia = new Uint8Array(ab);
-  for (var i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
   }
-  var blob = new Blob([ab], { type: mimeString });
-  return blob;
-}
+
+
+  // Terminate web cam
+  onStop() {
+    this.image = true;
+    this.videoStream = false;
+    this.postPage = !this.postPage;
+    this.videoElement.nativeElement.pause();
+    (this.videoElement.nativeElement.srcObject as MediaStream).getVideoTracks()[0].stop();
+    this.videoElement.nativeElement.srcObject = null;
+  }
+
+  // Reset camera to take another pic
+  resetCamera() {
+    this.image = true;
+    this.videoStream = false;
+  }
+
+  // Converting image to Blob
+  dataURItoBlob(dataURI) {
+    var byteString = atob(dataURI.split(',')[1]);
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    var blob = new Blob([ab], { type: mimeString });
+    return blob;
+  }
+
+  // createImageFromBlob(image: Blob) {
+  //   let reader = new FileReader();
+  //   reader.addEventListener('load', () => {
+  //     this.pic = reader.result;
+  //   }, false);
+  //   if (image) {
+  //     reader.readAsDataURL(image);
+  //   }
+  // }
 
 
 }

@@ -6,20 +6,22 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class PostsService {
-  constructor() { }
+  constructor(
+
+  ) { }
 
   posts: IPosts[] = [
     {
       id: this.getRandomNumber(),
       title: 'this is title',
       description: 'this is description',
-      image: 'https://www.publicdomainpictures.net/pictures/320000/nahled/background-image.png'
+      image: 'https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg'
     },
     {
       id: this.getRandomNumber(),
       title: 'this is title two',
       description: 'this is description two',
-      image: 'https://www.publicdomainpictures.net/pictures/320000/nahled/background-image.png'
+      image: 'https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg'
     }
   ];
 
@@ -33,11 +35,14 @@ export class PostsService {
     this.posts = [
       ...this.posts,{
         ...post,
-        id: this.getRandomNumber()
+        id: this.getRandomNumber(),
       }
     ];
     this.posts$.next(this.posts);
   }
 
 
+
 }
+
+
