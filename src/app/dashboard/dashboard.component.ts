@@ -79,7 +79,7 @@ export class DashboardComponent implements OnInit {
     }
     this.posts.title = this.postFrom.controls.title.value;
     this.posts.description = this.postFrom.controls.description.value;
-    this.posts.image = this.pic;
+    this.posts.image = this.picture;
     this.savePost();
 
   }
@@ -140,13 +140,13 @@ export class DashboardComponent implements OnInit {
     this.renderer.setProperty(this.canvas.nativeElement, 'width', this.videoWidth);
     this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
     this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
-    this.picture = this.dataURItoBlob(this.canvas.nativeElement.toDataURL());
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.pic = reader.result;
-    }
-    reader.readAsDataURL(this.picture);
+    this.picture = this.canvas.nativeElement.toDataURL();
+    //this.picture = this.dataURItoBlob(this.canvas.nativeElement.toDataURL());
+    // const reader = new FileReader();
+    // reader.onload = () => {
+    //   this.pic = reader.result;
+    // }
+    // reader.readAsDataURL(this.picture);
 
   }
 
@@ -159,6 +159,14 @@ export class DashboardComponent implements OnInit {
     this.videoElement.nativeElement.pause();
     (this.videoElement.nativeElement.srcObject as MediaStream).getVideoTracks()[0].stop();
     this.videoElement.nativeElement.srcObject = null;
+    this.clearImage();
+
+  }
+
+  clearImage() {
+    const contex = this.canvas.nativeElement.getContext('2d');
+    contex.clearRect(0, 0, this.videoWidth, this.videoHeight);
+    this.picture = '';
   }
 
   // Reset camera to take another pic
