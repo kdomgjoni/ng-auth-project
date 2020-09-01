@@ -74,6 +74,10 @@ export class DashboardComponent implements OnInit {
     this.clearForm();
   }
 
+  removePost(post){
+    this.postService.deletePost(post.id);
+  }
+
   onSubmit() {
     if (this.postFrom.invalid) {
       return;

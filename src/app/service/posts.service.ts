@@ -41,6 +41,15 @@ export class PostsService {
     this.posts$.next(this.posts);
   }
 
+  deletePost(id){
+    const index = this.posts.findIndex(post =>post.id === id);
+    this.posts = [
+      ...this.posts.slice(0, index),
+      ...this.posts.slice(index + 1),
+    ];
+    this.posts$.next(this.posts);
+  }
+
 
 
 }
