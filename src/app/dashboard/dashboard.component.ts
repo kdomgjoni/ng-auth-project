@@ -71,6 +71,7 @@ export class DashboardComponent implements OnInit {
 
   savePost() {
     this.postService.addPost(this.posts);
+    this.clearForm();
   }
 
   onSubmit() {
@@ -186,6 +187,10 @@ export class DashboardComponent implements OnInit {
     }
     var blob = new Blob([ab], { type: mimeString });
     return blob;
+  }
+
+  clearForm(){
+    this.postFrom.reset();
   }
 
   // createImageFromBlob(image: Blob) {
