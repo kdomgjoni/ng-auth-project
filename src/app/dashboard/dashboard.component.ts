@@ -46,15 +46,6 @@ export class DashboardComponent implements OnInit {
   ) {
 
     this.$posts = this.postService.posts$;
-    // this.postService.posts$.subscribe(data => {
-    //   data.forEach((i, index, arr) => {
-    //     if (index === arr.length - 1) {
-    //       this.pic = this.createImageFromBlob(i.image);
-    //       console.log(this);
-    //     }
-    //   });
-    // });
-
   }
 
   ngOnInit() {
@@ -76,6 +67,7 @@ export class DashboardComponent implements OnInit {
 
   removePost(post){
     this.postService.deletePost(post.id);
+    console.log(post.id);
   }
 
   onSubmit() {

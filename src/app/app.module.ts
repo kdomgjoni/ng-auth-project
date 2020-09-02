@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { NotificationService } from './service/notification.service';
+import { PostDetailsComponent } from './dashboard/post-details/post-details.component';
 
 
 
@@ -27,7 +28,8 @@ import { NotificationService } from './service/notification.service';
     LoginComponent,
     RegisterComponent,
     DashboardComponent,
-    NavbarComponent
+    NavbarComponent,
+    PostDetailsComponent
   ],
   imports: [
     BrowserModule,
